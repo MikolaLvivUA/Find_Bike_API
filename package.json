@@ -1,7 +1,7 @@
 {
   "name": "cycling_repair_api",
   "version": "1.0.0",
-  "description": "The symply cycling-repair-API",
+  "description": "The symply Find_Bike_API",
   "main": "index.js",
   "scripts": {
     "start:dev": "node -r dotenv/config --inspect=0.0.0.0:9227 ./dist/",
