@@ -44,7 +44,7 @@ class App {
     }
 
     private setupDB(): void {
-      mongoose.connect(config.MONGODB_URL, {useNewUrlParser: true});
+      mongoose.connect(config.MONGODB_URL, {useNewUrlParser: true, useUnifiedTopology: true});
 
       const db = mongoose.connection;
       db.on('error', console.log.bind(console, 'MONGO ERROR'));
@@ -76,6 +76,7 @@ class App {
     private mountRoutes(): void {
       this.app.use('/api', apiRouter);
       this.app.use('*', notFoundRouter);
+
     }
 }
 
