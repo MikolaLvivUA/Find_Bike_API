@@ -56,7 +56,7 @@ export const UserSchema: Schema = new Schema<IUser>({
         default: UserStatusEnum.ACTIVE_STATUS
     },
     role: {
-        type: String,
+        type: String
     },
     Bikes: [bikeSubModel],
     accessTokens: [accessTokenSubModel],
