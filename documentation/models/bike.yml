@@ -1,0 +1,24 @@
+  properties:
+    _id:
+      type: string
+    serial_number:
+      type: string
+      description: The bike serial number
+    color:
+      type: string
+      description: The bike color
+    type:
+      type: string
+      description: The bike type
+    description:
+      type: string
+      description: The bike description
+    photo:
+      type: string
+      description: The bike photo
+    status:
+      type: string
+      description: The finding status
+    createdAt:
+      type: string
+      format: date-time

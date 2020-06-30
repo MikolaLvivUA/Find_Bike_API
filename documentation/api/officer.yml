@@ -1,0 +1,53 @@
+get:
+  summary: Get all officer
+  tags:
+    - officer
+  responses:
+    200:
+      description: Return all officer ojects
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  offcers:
+                    items:
+                      type: object
+                      $ref: '../models/officer.yml'
+
+post:
+  summary: Create new officer
+  tags:
+    - officer
+  requestBody:
+    description: Creating data of new offcer
+    content:
+      application/json:
+        schema:
+          properties:
+            name:
+              type: string
+              required: true
+              description: The officer name
+            surname:
+              type: string
+              required: true
+              description: The officer surname
+            officer_number:
+              type: string
+              required: true
+              description: The officer number
+  responses:
+    201:
+      description: Created
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                $ref: '../models/new-officer.yml'

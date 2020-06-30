@@ -1,27 +1,34 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { IUser } from '../../interfaces';
 import { HASH_PASSWORD } from '../../helpers';
-import { userService } from '../../services';
+import UserService from '../../services';
 import { ResponseStatusCodesEnum } from '../../constants';
 
-class UserController {
-    async createUser(req: Request, res: Response) {
-        const user = req.body as IUser;
+export default class UserController {
+    constructor(
+        private readonly userService: UserService
+    ) {}
 
-        user.password = await HASH_PASSWORD(user.password);
+    async createUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const user = req.body as IUser;
 
-        await userService.createUser(user);
+            user.password = await HASH_PASSWORD(user.password);
 
-        res.status(ResponseStatusCodesEnum.CREATED).end();
+            await this.userService.createUser(user);
+
+            res.status(ResponseStatusCodesEnum.CREATED).end();
+        } catch (e) {
+
+            next(e);
+        }
     }
 
-    async getUserById(req: Request, res: Response) {
+    async getUserById(req: Request, res: Response): Promise<void> {
         const { userId } = req.params;
 
-        const user = await userService.getUserById(userId);
+        const user = await this.userService.getUserById(userId);
 
         res.json({data: user});
     }
 }
-
-export const userController = new UserController();

@@ -3,7 +3,7 @@ export const config = {
     HOST: process.env.PORT || 'http://localhost',
     FRONTEND_URL: process.env.FRONTEND_URL || 'http://localhost:5000',
 
-    ALLOWED_ORIGIN: process.env.ALLOWED_ORIGIN || 'http://localhost:4200;http://localhost:3000',
+    ALLOWED_ORIGIN: process.env.ALLOWED_ORIGIN || 'http://localhost:4200;http://localhost:3000;http://localhost:5000',
 
     CRON_JOB_PERIOD: process.env.CRON_JOB_PERIOD || '0 0 * * *',
 

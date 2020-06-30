@@ -1,0 +1,79 @@
+patch:
+  summary: Update officer job by id
+  tags:
+    - officer
+  parameters:
+    - name: officerId
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    description: Updating data for oficcer job
+    content:
+      application/json:
+        schema:
+          properties:
+            bike_id:
+              type: string
+              description: The finding bike id
+            job_status:
+              type: string
+              description: The officer job status
+  responses:
+    200:
+      description: The updated job object
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                $ref: '../models/job.yml'
+
+get:
+  summary: Returns officer job by id
+  tags:
+    - officer
+  parameters:
+    - name: officerId
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: jobId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: The officer job object
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                $ref: '../models/job.yml'
+
+delete:
+  summary: Returns officer job by id
+  tags:
+    - officer
+  parameters:
+    - name: officerId
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: jobId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    204:
+      description: Job deleted
