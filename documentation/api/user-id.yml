@@ -1,0 +1,85 @@
+patch:
+  summary: Update user by id
+  tags:
+    - user
+  parameters:
+    - name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    description: Updating data for user
+    required: true
+    content:
+      application/json:
+        schema:
+          properties:
+            name:
+              type: string
+              description: the user name
+            surname:
+              type: string
+              description: the user surname
+            email:
+              type: string
+              description: the user email
+            password:
+              type: string
+              description: the userpassword
+            phone:
+              type: string
+              description: the user phone
+            dateOfBirth:
+              type: string
+              format: date
+              description: the user age
+  responses:
+    200:
+      description: Returns updated user object
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                $ref: '../models/user.yml'
+
+
+get:
+  summary: Returns user by id
+  tags:
+    - user
+  parameters:
+    - name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: The user object
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                $ref: '../models/user.yml'
+
+
+delete:
+  summary: Delete user by id
+  tags:
+    - user
+  parameters:
+    - name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    204:
+      description: user deleted

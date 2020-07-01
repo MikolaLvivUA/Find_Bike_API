@@ -1,7 +1,7 @@
 import { UserModel } from '../../database';
 import { IUser } from '../../interfaces';
 
-class UserService {
+export default class UserService {
     createUser(user: Partial<IUser>): Promise<IUser> {
         const userToCreate = new UserModel(user);
 
@@ -12,5 +12,3 @@ class UserService {
         return UserModel.findById(userId) as any;
     }
 }
-
-export const userService = new UserService();

@@ -7,6 +7,7 @@ import * as dotenv from 'dotenv';
 import * as morgan from 'morgan';
 import * as mongoose from 'mongoose';
 import * as path from 'path';
+import { OpenApiValidator } from 'express-openapi-validator';
 
 import { config } from './config';
 import { apiRouter, notFoundRouter } from './routes';
@@ -40,6 +41,12 @@ class App {
         this.setupDB();
 
         this.app.use(this.customErrorHandler);
+
+        new OpenApiValidator({
+            apiSpec: (path.resolve(process.cwd(), 'documentation', 'openapi.yml')),
+            validateRequests: true,
+            validateResponses: true
+        }).install(this.app);
 
     }
 
@@ -78,6 +85,7 @@ class App {
         this.app.use('*', notFoundRouter);
 
     }
+
 }
 
 export const app = new App().app;

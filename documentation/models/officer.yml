@@ -1,0 +1,21 @@
+properties:
+  _id:
+    type: string
+    decription: The officer id
+  name:
+    type: string
+    description: The officer name
+  surname:
+    type: string
+    description: The officer surname
+  officer_number:
+    type: string
+    description: The officer number
+  jobs:
+    items:
+      type: object
+      description: The officer current procces of finding bike
+      $ref: 'job.yml'
+  createdAt:
+    type: string
+    format: date-time

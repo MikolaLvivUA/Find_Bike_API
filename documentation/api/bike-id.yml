@@ -1,0 +1,82 @@
+get:
+  summary: return bike object by id
+  tags:
+    - bike
+  parameters:
+    - name: bikeId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: Returns bike object
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                $ref: '../models/bike.yml'
+
+patch:
+  summary: Update bike by id
+  tags:
+    - bike
+  parameters:
+    - name: bikeId
+      in: path
+      required: true
+      schema:
+        type: string
+  requestBody:
+    description: Updatin data for user bike
+    content:
+      application/json:
+        schema:
+          properties:
+            serial_number:
+              type: string
+              description: The bike serial number
+            color:
+              type: string
+              description: The bike color
+            type:
+              type: string
+              description: The bike type
+            description:
+              type: string
+              description: The bike description
+            photo:
+              type: string
+              description: The bike photo
+            status:
+              type: string
+              description: The finding status
+  responses:
+    200:
+      description: Returns updated bike object
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                $ref: '../models/bike.yml'
+
+
+delete:
+  summary: delete bike by id
+  tags:
+    - bike
+  parameters:
+    - name: bikeId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    204:
+      description: bike deleted

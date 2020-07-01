@@ -1,0 +1,63 @@
+get:
+  summary: Returns user bikes list
+  tags:
+    - user
+  parameters:
+    - name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    200:
+      description: The list of user bikes
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  bikes:
+                    items:
+                      type: object
+                      $ref: '../models/bike.yml'
+
+post:
+  summary: Add a new bikes
+  tags:
+    - user
+  requestBody:
+    description: A new bikes objects
+    required: true
+    content:
+      application/json:
+        schema:
+          items:
+            type: object
+            properties:
+              serial_number:
+                type: string
+                required: true
+                description: The bike serial_number
+              color:
+                type: string
+                required: true
+                description: The bike color
+              type:
+                type: string
+                required: true
+                description: The bike type
+              description:
+                type: string
+                required: true
+                description: The bike description
+              photo:
+                type: string
+                required: true
+                format: binary
+                description: The bike photo
+  responses:
+    201:
+      description: Created
