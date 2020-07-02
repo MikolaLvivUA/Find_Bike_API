@@ -45,8 +45,7 @@ class App {
         new OpenApiValidator({
             apiSpec: (path.resolve(process.cwd(), 'documentation', 'openapi.yml')),
             validateRequests: true,
-            validateResponses: true,
-            operationHandlers: path.join(process.cwd())
+            validateResponses: true
         })
             .install(this.app)
             .then(() => {
