@@ -45,8 +45,19 @@ class App {
         new OpenApiValidator({
             apiSpec: (path.resolve(process.cwd(), 'documentation', 'openapi.yml')),
             validateRequests: true,
-            validateResponses: true
-        }).install(this.app);
+            validateResponses: true,
+            operationHandlers: path.join(process.cwd())
+        })
+            .install(this.app)
+            .then(() => {
+                this.mountRoutes();
+                this.app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+                    res.status(err.status || 500).json({
+                        message: err.message,
+                        errors: err.errors
+                    });
+                });
+            });
 
     }
 

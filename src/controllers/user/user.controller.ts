@@ -24,7 +24,7 @@ export default class UserController {
         }
     }
 
-    async getUserById(req: Request, res: Response): Promise<void> {
+    async getUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
         const { userId } = req.params;
 
         const user = await this.userService.getUserById(userId);

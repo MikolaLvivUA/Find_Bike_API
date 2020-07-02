@@ -10,8 +10,9 @@ const userController = new UserController(userService);
 const router = Router();
 
 router.post('/', /*checkIsUserValidMiddleware,*/
-    (req: Request, res: Response, next: NextFunction) => userController.createUser(req, res, next) );
+    (req: Request, res: Response, next: NextFunction) => userController.createUser(req, res, next));
 
-router.get('/:userId', userController.getUserById.bind(userController));
+router.get('/:userId',
+    (req: Request, res: Response, next: NextFunction) => userController.getUserById(req, res, next));
 
 export const userRouter = router;
