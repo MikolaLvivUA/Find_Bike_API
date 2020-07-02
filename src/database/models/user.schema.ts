@@ -43,13 +43,10 @@ export const UserSchema: Schema = new Schema<IUser>({
         required: true
     },
     phone: {
-        type: String,
-        required: true
+        type: String
     },
-    age: {
-        type: String,
-        required: true
-    },
+    dateOfBirth: {
+        type: Date },
     status: {
         type: String,
         required: true,
