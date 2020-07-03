@@ -10,21 +10,16 @@ export default class UserController {
     ) {}
 
     async createUser(req: Request, res: Response, next: NextFunction): Promise<void> {
-        try {
-            const user = req.body as IUser;
+        const user = req.body as IUser;
 
-            user.password = await HASH_PASSWORD(user.password);
+        user.password = await HASH_PASSWORD(user.password);
 
-            await this.userService.createUser(user);
+        await this.userService.createUser(user);
 
-            res.status(ResponseStatusCodesEnum.CREATED).end();
-        } catch (e) {
-
-            next(e);
-        }
+        res.status(ResponseStatusCodesEnum.CREATED).end();
     }
 
-    async getUserById(req: Request, res: Response): Promise<void> {
+    async getUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
         const { userId } = req.params;
 
         const user = await this.userService.getUserById(userId);

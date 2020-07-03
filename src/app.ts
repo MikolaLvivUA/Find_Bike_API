@@ -37,7 +37,6 @@ class App {
 
         this.app.use(express.static(path.resolve((global as any).appRoot, 'public')));
 
-        this.mountRoutes();
         this.setupDB();
 
         this.app.use(this.customErrorHandler);
@@ -46,7 +45,17 @@ class App {
             apiSpec: (path.resolve(process.cwd(), 'documentation', 'openapi.yml')),
             validateRequests: true,
             validateResponses: true
-        }).install(this.app);
+        })
+            .install(this.app)
+            .then(() => {
+                this.mountRoutes();
+                this.app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+                    res.status(err.status || 500).json({
+                        message: err.message,
+                        errors: err.errors
+                    });
+                });
+            });
 
     }
 

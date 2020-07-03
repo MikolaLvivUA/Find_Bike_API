@@ -10,33 +10,53 @@ servers:
 paths:
   #User
   /users:
-    $ref: 'api/user.yml'
+    post:
+      summary: Add a new user
+      tags:
+        - user
+      requestBody:
+        description: A new user object
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+                  description: The user name
+                surname:
+                  type: string
+                  description: The user surname
+                email:
+                  type: string
+                  description: The user email
+                phone:
+                  type: string
+                  description: The user phone
+                dateOfBirth:
+                  type: string
+                  format: date
+                  description: The user phone
+              required:
+                - name
+                - surname
+                - email
+                - phone
+                - dateOfBirth
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: 'models/new-user.yml'
+        500:
+          description: InternalServerError
 
-  /users/{userId}:
-    $ref: 'api/user-id.yml'
 
-  /users/{userId}/bikes:
-    $ref: 'api/user-id-bike.yml'
-  #Bike
-  /bikes/{bikeId}:
-    $ref: 'api/bike-id.yml'
-  #Officer
-  /officer:
-    $ref: 'api/officer.yml'
 
-  /officer/{officerId}:
-    $ref: 'api/officer-id.yml'
 
-  /officer/{officerId}/jobs:
-    $ref: 'api/officer-id-job.yml'
-
-  /officer/{officerId}/jobs/{jobId}:
-    $ref: 'api/job-id.yml'
-
-tags:
-  - name: user
-    description: User enpoints
-  - name: officer
-    description: Officer endpoints
-  - name: bike
-    description: Bike endpoints
