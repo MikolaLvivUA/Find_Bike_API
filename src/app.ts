@@ -37,7 +37,6 @@ class App {
 
         this.app.use(express.static(path.resolve((global as any).appRoot, 'public')));
 
-        this.mountRoutes();
         this.setupDB();
 
         this.app.use(this.customErrorHandler);
