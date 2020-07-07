@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
+
 import { IUser } from '../../interfaces';
-import { HASH_PASSWORD } from '../../helpers';
+import { arrayOfUserObjectsAdapter, HASH_PASSWORD, userObjectResourceAdapter } from '../../helpers';
 import UserService from '../../services';
 import { ResponseStatusCodesEnum } from '../../constants';
 
@@ -10,13 +11,15 @@ export default class UserController {
     ) {}
 
     async createUser(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const user = req.body as IUser;
+        const creatingData = req.body as IUser;
 
-        user.password = await HASH_PASSWORD(user.password);
+        creatingData.password = await HASH_PASSWORD(creatingData.password);
 
-        await this.userService.createUser(user);
+        const user = await this.userService.createUser(creatingData);
 
-        res.status(ResponseStatusCodesEnum.CREATED).end();
+        const adaptedUserObject = userObjectResourceAdapter(user);
+
+        res.status(ResponseStatusCodesEnum.CREATED).json({data: adaptedUserObject});
     }
 
     async getUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -24,6 +27,36 @@ export default class UserController {
 
         const user = await this.userService.getUserById(userId);
 
-        res.json({data: user});
+        const adaptedUserObject = userObjectResourceAdapter(user);
+
+        res.json({data: adaptedUserObject});
+    }
+
+    async getAllUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const users = await this.userService.getAllUsers() as any; //TODO Think about it
+
+        const adaptedUsersArray = arrayOfUserObjectsAdapter(users);
+
+        res.json({data: adaptedUsersArray});
+    }
+
+    async updateUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
+
+        const {userId} = req.params;
+        const updatingData = req.body;
+
+        const updatedUser = await this.userService.updateUserById(userId, updatingData);
+
+        const adaptedUserObject = userObjectResourceAdapter(updatedUser);
+
+        res.json({data: adaptedUserObject});
+    }
+
+    async deleteUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
+        const {userId} = req.params;
+
+        await this.userService.deleteUserById(userId);
+
+        res.status(ResponseStatusCodesEnum.NO_CONTENT).end();
     }
 }

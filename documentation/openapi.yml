@@ -26,21 +26,25 @@ paths:
                   description: The user name
                 surname:
                   type: string
-                  description: The user surname
+                  description: the user surname
                 email:
                   type: string
-                  description: The user email
+                  description: the user email
+                password:
+                  type: string
+                  description: the user password
                 phone:
                   type: string
-                  description: The user phone
+                  description: the user phone
                 dateOfBirth:
                   type: string
                   format: date
-                  description: The user phone
+                  description: the user age
               required:
                 - name
                 - surname
                 - email
+                - password
                 - phone
                 - dateOfBirth
       responses:
@@ -53,10 +57,527 @@ paths:
                 properties:
                   data:
                     type: object
-                    $ref: 'models/new-user.yml'
+                    $ref: 'models/user.yml'
         500:
           description: InternalServerError
 
 
+    get:
+      summary: Get all users
+      tags:
+        - user
+      responses:
+        200:
+          description: Return all users objects
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    items:
+                      type: object
+                      $ref: 'models/user.yml'
+        500:
+          description: InternalServerError
 
 
+  /users/{userId}:
+    patch:
+      summary: Update user by id
+      tags:
+        - user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Updating data for user
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+                  description: the user name
+                surname:
+                  type: string
+                  description: the user surname
+                email:
+                  type: string
+                  description: the user email
+                phone:
+                  type: string
+                  description: the user phone
+                dateOfBirth:
+                  type: string
+                  format: date
+                  description: the user age
+              additionalProperties: false
+      responses:
+        200:
+          description: Returns updated user object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: 'models/user.yml'
+
+
+    get:
+      summary: Returns user by id
+      tags:
+        - user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: The user object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: 'models/user.yml'
+
+
+    delete:
+      summary: Delete user by id
+      tags:
+        - user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: user deleted
+
+  /users/{userId}/bikes:
+    get:
+      summary: Returns user bikes list
+      tags:
+        - user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: The list of user bikes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      bikes:
+                        items:
+                          type: object
+                          $ref: 'models/bike.yml'
+
+    post:
+      summary: Add a new bikes
+      tags:
+        - user
+      requestBody:
+        description: A new bikes objects
+        required: true
+        content:
+          application/json:
+            schema:
+              items:
+                type: object
+                properties:
+                  serial_number:
+                    type: string
+                    description: The bike serial_number
+                  color:
+                    type: string
+                    description: The bike color
+                  type:
+                    type: string
+                    description: The bike type
+                  description:
+                    type: string
+                    description: The bike description
+                  photo:
+                    type: string
+                    format: binary
+                    description: The bike photo
+                required:
+                  - serial_number
+                  - color
+                  - type
+                  - description
+                  - photo
+      responses:
+        201:
+          description: Created
+  #Bike
+  /bikes/{bikeId}:
+    get:
+      summary: return bike object by id
+      tags:
+        - bike
+      parameters:
+        - name: bikeId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Returns bike object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: 'models/bike.yml'
+
+    patch:
+      summary: Update bike by id
+      tags:
+        - bike
+      parameters:
+        - name: bikeId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Updatin data for user bike
+        content:
+          application/json:
+            schema:
+              properties:
+                serial_number:
+                  type: string
+                  description: The bike serial number
+                color:
+                  type: string
+                  description: The bike color
+                type:
+                  type: string
+                  description: The bike type
+                description:
+                  type: string
+                  description: The bike description
+                photo:
+                  type: string
+                  description: The bike photo
+                status:
+                  type: string
+                  description: The finding status
+      responses:
+        200:
+          description: Returns updated bike object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: 'models/bike.yml'
+
+
+    delete:
+      summary: delete bike by id
+      tags:
+        - bike
+      parameters:
+        - name: bikeId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        204:
+          description: bike deleted
+  #Officer
+  /officer:
+      get:
+        summary: Get all officer
+        tags:
+          - officer
+        responses:
+          200:
+            description: Return all officer ojects
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        offcers:
+                          items:
+                            type: object
+                            $ref: 'models/officer.yml'
+
+      post:
+        summary: Create new officer
+        tags:
+          - officer
+        requestBody:
+          description: Creating data of new offcer
+          required: true
+          content:
+            application/json:
+              schema:
+                properties:
+                  name:
+                    type: string
+                    description: The officer name
+                  surname:
+                    type: string
+                    description: The officer surname
+                  officer_number:
+                    type: string
+                    description: The officer number
+                required:
+                  - name
+                  - suraname
+                  - officer_number
+        responses:
+          201:
+            description: Created
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: This is use id
+                        name:
+                          type: string
+                          description: The officer name
+                        surname:
+                          type: string
+                          description: The officer surname
+                        officer_number:
+                          type: string
+                          description: The officer number
+                        createdAt:
+                          type: string
+                          format: date-time
+
+  /officer/{officerId}:
+      get:
+        summary: Returns officer by id
+        tags:
+          - officer
+        parameters:
+          - name: officerId
+            in: path
+            required: true
+            schema:
+              type: string
+        responses:
+          200:
+            description: The officer object
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      type: object
+                      $ref: 'models/officer.yml'
+
+      delete:
+        summary: Delete offcer by id
+        tags:
+          - officer
+        parameters:
+          - name: officerId
+            in: path
+            required: true
+            schema:
+              type: string
+        responses:
+          200:
+            description: oficer deleted
+
+  /officer/{officerId}/jobs:
+      get:
+        summary: Get officers job list
+        tags:
+          - officer
+        parameters:
+          - name: officerId
+            in: path
+            required: true
+            schema:
+              type: string
+        responses:
+          200:
+            description: The officer list of jobs
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        jobs:
+                          items:
+                            type: object
+                            $ref: 'models/job.yml'
+
+      post:
+        summary: Add new job for officer
+        tags:
+          - officer
+        parameters:
+          - name: officerId
+            in: path
+            required: true
+            schema:
+              type: string
+        requestBody:
+          description: A new job object
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bike_id:
+                    type: string
+                    description: The finding bike id
+                  job_status:
+                    type: string
+                    description: The offcer job status
+                required:
+                  - bike_id
+        responses:
+          201:
+            description: Created
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      type: object
+                      $ref: 'models/job.yml'
+
+
+  /officer/{officerId}/jobs/{jobId}:
+      patch:
+        summary: Update officer job by id
+        tags:
+          - officer
+        parameters:
+          - name: officerId
+            in: path
+            required: true
+            schema:
+              type: string
+        requestBody:
+          description: Updating data for oficcer job
+          content:
+            application/json:
+              schema:
+                properties:
+                  bike_id:
+                    type: string
+                    description: The finding bike id
+                  job_status:
+                    type: string
+                    description: The officer job status
+        responses:
+          200:
+            description: The updated job object
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      type: object
+                      $ref: 'models/job.yml'
+
+      get:
+        summary: Returns officer job by id
+        tags:
+          - officer
+        parameters:
+          - name: officerId
+            in: path
+            required: true
+            schema:
+              type: string
+          - name: jobId
+            in: path
+            required: true
+            schema:
+              type: string
+        responses:
+          200:
+            description: The officer job object
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    data:
+                      type: object
+                      $ref: 'models/job.yml'
+
+      delete:
+        summary: Delete officer job by id
+        tags:
+          - officer
+        parameters:
+          - name: officerId
+            in: path
+            required: true
+            schema:
+              type: string
+          - name: jobId
+            in: path
+            required: true
+            schema:
+              type: string
+        responses:
+          204:
+            description: Job deleted
+
+
+tags:
+  - name: user
+    description: User enpoints
+  - name: officer
+    description: Officer endpoints
+  - name: bike
+    description: Bike endpoints

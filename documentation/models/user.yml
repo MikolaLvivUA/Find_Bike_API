@@ -1,7 +1,6 @@
 properties:
   _id:
     type: string
-    format: uuid
   name:
     type: string
     description: The user name
@@ -16,14 +15,18 @@ properties:
     description: The user phone
   dateOfBirth:
     type: string
-    format: date
-    description: The user phone
+    description: The user date of birth
   bikes:
     type: array
     description: The user bikes
     items:
       type: object
       $ref: 'bike.yml'
+  status:
+    type: string
+    description: The user status
+  role:
+    type: string
+    description: The user role
   createdAt:
     type: string
-    format: date-time

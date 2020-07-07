@@ -30,16 +30,17 @@ post:
           properties:
             name:
               type: string
-              required: true
               description: The officer name
             surname:
               type: string
-              required: true
               description: The officer surname
             officer_number:
               type: string
-              required: true
               description: The officer number
+          required:
+            - name
+            - suraname
+            - officer_number
   responses:
     201:
       description: Created
@@ -50,4 +51,19 @@ post:
             properties:
               data:
                 type: object
-                $ref: '../models/new-officer.yml'
+                properties:
+                  id:
+                    type: string
+                    decription: The officer id
+                  name:
+                    type: string
+                    description: The officer name
+                  surname:
+                    type: string
+                    description: The officer surname
+                  officer_number:
+                    type: string
+                    description: The officer number
+                  createdAt:
+                    type: string
+                    format: date-time

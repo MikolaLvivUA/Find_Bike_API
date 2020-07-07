@@ -15,16 +15,6 @@ const bikeSubModel = {
     createdAt: String
 };
 
-const accessTokenSubModel = {
-    accessToken: String,
-    refreshToken: String,
-    createdAt: {
-        type: Date,
-        default: Date.now,
-        required: true
-    }
-};
-
 export const UserSchema: Schema = new Schema<IUser>({
     name: {
         type: String,
@@ -43,7 +33,8 @@ export const UserSchema: Schema = new Schema<IUser>({
         required: true
     },
     phone: {
-        type: String
+        type: String,
+        required: true
     },
     dateOfBirth: {
         type: Date },
@@ -56,7 +47,6 @@ export const UserSchema: Schema = new Schema<IUser>({
         type: String
     },
     Bikes: [bikeSubModel],
-    accessTokens: [accessTokenSubModel],
     createdAt: {
         type: Date,
         default: Date.now,

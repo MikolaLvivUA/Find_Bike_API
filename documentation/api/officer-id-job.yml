@@ -44,12 +44,12 @@ post:
           properties:
             bike_id:
               type: string
-              required: true
               description: The finding bike id
             job_status:
               type: string
-              required: true
               description: The offcer job status
+          required:
+            - bike_id
   responses:
     201:
       description: Created

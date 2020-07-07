@@ -1,7 +1,6 @@
 properties:
-  _id:
+  id:
     type: string
-    decription: The officer id
   name:
     type: string
     description: The officer name

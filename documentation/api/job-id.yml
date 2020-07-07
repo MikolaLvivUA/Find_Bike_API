@@ -60,7 +60,7 @@ get:
                 $ref: '../models/job.yml'
 
 delete:
-  summary: Returns officer job by id
+  summary: Delete officer job by id
   tags:
     - officer
   parameters:
