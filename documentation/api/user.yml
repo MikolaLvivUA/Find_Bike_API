@@ -11,29 +11,30 @@ post:
           properties:
             name:
               type: string
-              required: true
               description: The user name
             surname:
               type: string
-              required: true
               description: the user surname
             email:
               type: string
-              required: true
               description: the user email
             password:
               type: string
-              required: true
               description: the user password
             phone:
               type: string
-              required: true
               description: the user phone
             dateOfBirth:
               type: string
               format: date
-              required: true
               description: the user age
+          required:
+            - name
+            - surname
+            - email
+            - password
+            - phone
+            - dateOfBirth
   responses:
     201:
       description: Created
@@ -44,7 +45,7 @@ post:
             properties:
               data:
                 type: object
-                $ref: '../models/new-user.yml'
+                $ref: '../models/user.yml'
     500:
       description: InternalServerError
 

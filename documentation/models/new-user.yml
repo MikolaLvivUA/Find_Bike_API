@@ -1,7 +1,6 @@
 properties:
   _id:
     type: string
-    format: uuid
   name:
     type: string
     description: The user name
@@ -16,7 +15,6 @@ properties:
     description: The user phone
   dateOfBirth:
     type: string
-    format: date
     description: The user phone
   createdAt:
     type: string

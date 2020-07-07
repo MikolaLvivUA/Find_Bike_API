@@ -9,6 +9,7 @@ import * as mongoose from 'mongoose';
 import * as path from 'path';
 import { OpenApiValidator } from 'express-openapi-validator';
 
+import logger from './helpers/logger';
 import { config } from './config';
 import { apiRouter, notFoundRouter } from './routes';
 
@@ -39,8 +40,6 @@ class App {
 
         this.setupDB();
 
-        this.app.use(this.customErrorHandler);
-
         new OpenApiValidator({
             apiSpec: (path.resolve(process.cwd(), 'documentation', 'openapi.yml')),
             validateRequests: true,
@@ -49,30 +48,21 @@ class App {
             .install(this.app)
             .then(() => {
                 this.mountRoutes();
-                this.app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-                    res.status(err.status || 500).json({
-                        message: err.message,
-                        errors: err.errors
-                    });
-                });
-            });
+                this.app.use(this.customErrorHandler);
 
+            });
+        this.app.use(this.customErrorHandler);
+        this.app.use(this.loggerFunction);
     }
 
     private setupDB(): void {
-        mongoose.connect(config.MONGODB_URL, {useNewUrlParser: true, useUnifiedTopology: true});
+        mongoose.connect(config.MONGODB_URL, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            useFindAndModify: false});
 
         const db = mongoose.connection;
         db.on('error', console.log.bind(console, 'MONGO ERROR'));
-    }
-
-    private customErrorHandler(err: any, req: Request, res: Response, next: NextFunction): void {
-        res
-            .status(err.status || 500)
-            .json({
-                message: err.message || 'Unknown Error',
-                code: err.code
-            });
     }
 
     private corsConfiguration = (origin: any, callback: any) => {
@@ -93,6 +83,31 @@ class App {
         this.app.use('/api', apiRouter);
         this.app.use('*', notFoundRouter);
 
+    }
+
+    private customErrorHandler(err: any, req: Request, res: Response, next: NextFunction): void {
+        res
+            .status(err.status || 500)
+            .json({
+                message: err.message || 'unknown error',
+                errors: err.errors,
+                status: err.status
+            });
+        logger.log({
+            message: err.message,
+            level: 'error',
+            response: err, status: 500
+        });
+    }
+
+    private loggerFunction(req: Request, res: Response, next: NextFunction) {
+        logger.log({
+            message: 'Request received', level: 'info',
+            method: req.method,
+            url: req.path,
+            data: req.body
+        });
+        next();
     }
 
 }
