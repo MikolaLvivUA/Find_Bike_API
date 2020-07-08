@@ -7,7 +7,7 @@ properties:
   surname:
     type: string
     description: The officer surname
-  officer_number:
+  officerNumber:
     type: string
     description: The officer number
   jobs:

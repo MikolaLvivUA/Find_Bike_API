@@ -28,16 +28,13 @@ export const UserSchema: Schema = new Schema<IUser>({
         type: String,
         required: true
     },
-    password: {
-        type: String,
-        required: true
-    },
     phone: {
         type: String,
         required: true
     },
     dateOfBirth: {
-        type: Date },
+        type: Date
+    },
     status: {
         type: String,
         required: true,
@@ -46,7 +43,7 @@ export const UserSchema: Schema = new Schema<IUser>({
     role: {
         type: String
     },
-    Bikes: [bikeSubModel],
+    bikes: [bikeSubModel],
     createdAt: {
         type: Date,
         default: Date.now,

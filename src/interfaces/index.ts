@@ -1,2 +1,2 @@
-export * from './user.interface';
-export * from './bike.interface';
+export * from './user-interface';
+export * from './bike-interface';
