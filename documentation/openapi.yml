@@ -29,12 +29,15 @@ paths:
                   description: the user surname
                 email:
                   type: string
+                  pattern: '^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
                   description: the user email
                 password:
                   type: string
+                  pattern: '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$'
                   description: the user password
                 phone:
                   type: string
+                  pattern: '^[+]*[0-9]{5,20}$'
                   description: the user phone
                 dateOfBirth:
                   type: string
@@ -108,9 +111,11 @@ paths:
                   description: the user surname
                 email:
                   type: string
+                  pattern: '^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$'
                   description: the user email
                 phone:
                   type: string
+                  pattern: '^[+]*[0-9]{5,20}$'
                   description: the user phone
                 dateOfBirth:
                   type: string

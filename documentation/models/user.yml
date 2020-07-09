@@ -1,5 +1,5 @@
 properties:
-  _id:
+  id:
     type: string
   name:
     type: string

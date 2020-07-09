@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 
-import { IUser } from '../../interfaces';
-import { arrayOfUserObjectsAdapter, HASH_PASSWORD, userObjectResourceAdapter } from '../../helpers';
+import { arrayOfUserObjects, userObjectResource } from '../../helpers';
 import UserService from '../../services';
 import { ResponseStatusCodesEnum } from '../../constants';
+import { IRequestBodyUser } from '../../interfaces';
+import { customErrors, ErrorHandler } from '../../errors';
 
 export default class UserController {
     constructor(
@@ -11,13 +12,11 @@ export default class UserController {
     ) {}
 
     async createUser(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const creatingData = req.body as IUser;
-
-        creatingData.password = await HASH_PASSWORD(creatingData.password);
+        const creatingData = req.body as IRequestBodyUser;
 
         const user = await this.userService.createUser(creatingData);
 
-        const adaptedUserObject = userObjectResourceAdapter(user);
+        const adaptedUserObject = userObjectResource(user);
 
         res.status(ResponseStatusCodesEnum.CREATED).json({data: adaptedUserObject});
     }
@@ -27,7 +26,17 @@ export default class UserController {
 
         const user = await this.userService.getUserById(userId);
 
-        const adaptedUserObject = userObjectResourceAdapter(user);
+        if (!user) {
+            return next(
+                new ErrorHandler(
+                    ResponseStatusCodesEnum.BAD_REQUEST,
+                    customErrors.NOT_FOUND.message,
+                    customErrors.NOT_FOUND.code
+                )
+            );
+        }
+
+        const adaptedUserObject = userObjectResource(user);
 
         res.json({data: adaptedUserObject});
     }
@@ -35,7 +44,7 @@ export default class UserController {
     async getAllUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
         const users = await this.userService.getAllUsers() as any; //TODO Think about it
 
-        const adaptedUsersArray = arrayOfUserObjectsAdapter(users);
+        const adaptedUsersArray = arrayOfUserObjects(users);
 
         res.json({data: adaptedUsersArray});
     }
@@ -43,11 +52,11 @@ export default class UserController {
     async updateUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
 
         const {userId} = req.params;
-        const updatingData = req.body;
+        const updatingData = req.body as Partial<IRequestBodyUser>;
 
         const updatedUser = await this.userService.updateUserById(userId, updatingData);
 
-        const adaptedUserObject = userObjectResourceAdapter(updatedUser);
+        const adaptedUserObject = userObjectResource(updatedUser);
 
         res.json({data: adaptedUserObject});
     }

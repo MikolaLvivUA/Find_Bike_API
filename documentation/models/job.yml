@@ -1,5 +1,5 @@
 properties:
-  _id:
+  id:
     type: string
     description: the job id
   bike_id:

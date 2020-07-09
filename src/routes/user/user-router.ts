@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express';
 
-import UserController from '../../controllers/user/user.controller';
+import UserController from '../../controllers/user/user-controller';
 import UserService from '../../services';
 
 const userService = new UserService();

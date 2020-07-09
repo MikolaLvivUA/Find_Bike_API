@@ -1,8 +1,8 @@
 import { IUser } from '../../interfaces';
 
-export const userObjectResourceAdapter = (mongoObject: IUser) => {
+export const userObjectResource = (mongoObject: IUser) => {
     return {
-        id: mongoObject._id,
+        id: mongoObject._id.toString(),
         name: mongoObject.name,
         surname: mongoObject.surname,
         email: mongoObject.email,

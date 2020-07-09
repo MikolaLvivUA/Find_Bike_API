@@ -1,1 +1,1 @@
-export * from './not-found.router';
+export * from './not-found-router';
