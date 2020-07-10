@@ -29,7 +29,7 @@ export default class UserController {
         if (!user) {
             return next(
                 new ErrorHandler(
-                    ResponseStatusCodesEnum.BAD_REQUEST,
+                    ResponseStatusCodesEnum.NOT_FOUND,
                     customErrors.NOT_FOUND.message,
                     customErrors.NOT_FOUND.code
                 )
