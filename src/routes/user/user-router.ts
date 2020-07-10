@@ -1,10 +1,12 @@
 import { NextFunction, Request, Response, Router } from 'express';
 
-import UserController from '../../controllers/user/user-controller';
-import UserService from '../../services';
+// import UserController from '../../controllers/user/user-controller';
+// import UserService from '../../services';
+import { myContainer } from '../../dependency/inversify.config';
+import { TYPES } from '../../dependency/types';
+import { IUserController } from '../../dependency/interfaces';
 
-const userService = new UserService();
-const userController = new UserController(userService);
+const userController = myContainer.get<IUserController>(TYPES.userController);
 
 const router = Router();
 
