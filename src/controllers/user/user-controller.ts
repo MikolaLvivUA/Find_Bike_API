@@ -1,12 +1,12 @@
+import { inject, injectable } from 'inversify';
 import { NextFunction, Request, Response } from 'express';
+import 'reflect-metadata';
 
 import { arrayOfUserObjects, userObjectResource } from '../../helpers';
 import { IUserService } from '../../services';
 import { ResponseStatusCodesEnum } from '../../constants';
 import { IRequestBodyUser } from '../../interfaces';
 import { customErrors, ErrorHandler } from '../../errors';
-import { inject, injectable } from 'inversify';
-import 'reflect-metadata';
 import { TYPES } from '../../dependency/types';
 import { IUserController } from './user-controller-interface';
 
@@ -60,7 +60,7 @@ class UserController implements IUserController{
 
     async updateUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
 
-        const {userId} = req.params;
+        const { userId } = req.params;
         const updatingData = req.body as Partial<IRequestBodyUser>;
 
         const updatedUser = await this._userService.updateUserById(userId, updatingData);
@@ -71,7 +71,7 @@ class UserController implements IUserController{
     }
 
     async deleteUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const {userId} = req.params;
+        const { userId } = req.params;
 
         await this._userService.deleteUserById(userId);
 
@@ -79,4 +79,4 @@ class UserController implements IUserController{
     }
 }
 
-export {UserController};
+export { UserController };
