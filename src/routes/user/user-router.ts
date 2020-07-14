@@ -8,7 +8,8 @@ const userController = myContainer.get<IUserController>(TYPES.userController);
 
 const router = Router();
 
-router.post('/', userController.createUser);
+router.post('/',
+    (req: Request, res: Response, next: NextFunction) => userController.createUser(req, res, next));
 
 router.get('/:userId',
     (req: Request, res: Response, next: NextFunction) => userController.getUserById(req, res, next));

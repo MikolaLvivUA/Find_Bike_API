@@ -1,4 +1,5 @@
 import { Container } from 'inversify';
+
 import { TYPES } from './types';
 import { IUserController, UserController } from '../controllers/user';
 import { IUserService, UserService } from '../services/user';
