@@ -1,15 +1,14 @@
 import { NextFunction, Request, Response, Router } from 'express';
 
-import UserController from '../../controllers/user/user-controller';
-import UserService from '../../services';
+import { myContainer } from '../../dependency/inversify.config';
+import { TYPES } from '../../dependency/types';
+import { IUserController } from '../../controllers/user';
 
-const userService = new UserService();
-const userController = new UserController(userService);
+const userController = myContainer.get<IUserController>(TYPES.userController);
 
 const router = Router();
 
-router.post('/',
-    (req: Request, res: Response, next: NextFunction) => userController.createUser(req, res, next));
+router.post('/', userController.createUser);
 
 router.get('/:userId',
     (req: Request, res: Response, next: NextFunction) => userController.getUserById(req, res, next));

@@ -18,7 +18,9 @@
     "express-openapi-validator": "^3.16.4",
     "express-rate-limit": "^5.1.3",
     "helmet": "^3.23.0",
+    "inversify": "^5.0.1",
     "mongoose": "^5.9.19",
+    "reflect-metadata": "^0.1.13",
     "winston": "^3.3.3"
   },
   "devDependencies": {
@@ -34,6 +36,8 @@
     "@typescript-eslint/eslint-plugin": "^3.2.0",
     "@typescript-eslint/eslint-plugin-tslint": "^3.2.0",
     "@typescript-eslint/parser": "^3.2.0",
+    "@types/inversify": "^2.0.33",
+    "@types/reflect-metadata": "^0.1.0",
     "copyfiles": "^2.3.0",
     "eslint": "^7.2.0",
     "morgan": "^1.10.0",

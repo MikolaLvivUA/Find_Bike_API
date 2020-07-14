@@ -1,7 +1,11 @@
 import { UserModel } from '../../database';
 import { IRequestBodyUser, IUser } from '../../interfaces';
+import { injectable } from 'inversify';
+import 'reflect-metadata';
+import { IUserService } from './user-service-interface';
 
-export default class UserService {
+@injectable()
+class UserService implements IUserService{
     createUser(user: IRequestBodyUser): Promise<IUser> {
         const userToCreate = new UserModel(user);
 
@@ -24,3 +28,5 @@ export default class UserService {
         return UserModel.findByIdAndDelete(userId) as any;
     }
 }
+
+export { UserService };

@@ -1,20 +1,29 @@
 import { NextFunction, Request, Response } from 'express';
 
 import { arrayOfUserObjects, userObjectResource } from '../../helpers';
-import UserService from '../../services';
+import { IUserService } from '../../services';
 import { ResponseStatusCodesEnum } from '../../constants';
 import { IRequestBodyUser } from '../../interfaces';
 import { customErrors, ErrorHandler } from '../../errors';
+import { inject, injectable } from 'inversify';
+import 'reflect-metadata';
+import { TYPES } from '../../dependency/types';
+import { IUserController } from './user-controller-interface';
 
-export default class UserController {
+@injectable()
+class UserController implements IUserController{
+    private _userService: IUserService;
+
     constructor(
-        private readonly userService: UserService
-    ) {}
+        @inject(TYPES.userService) userService: IUserService
+    ) {
+        this._userService = userService;
+    }
 
     async createUser(req: Request, res: Response, next: NextFunction): Promise<void> {
         const creatingData = req.body as IRequestBodyUser;
 
-        const user = await this.userService.createUser(creatingData);
+        const user = await this._userService.createUser(creatingData);
 
         const adaptedUserObject = userObjectResource(user);
 
@@ -24,7 +33,7 @@ export default class UserController {
     async getUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
         const { userId } = req.params;
 
-        const user = await this.userService.getUserById(userId);
+        const user = await this._userService.getUserById(userId);
 
         if (!user) {
             return next(
@@ -42,7 +51,7 @@ export default class UserController {
     }
 
     async getAllUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const users = await this.userService.getAllUsers() as any; //TODO Think about it
+        const users = await this._userService.getAllUsers() as any; //TODO Think about it
 
         const adaptedUsersArray = arrayOfUserObjects(users);
 
@@ -54,7 +63,7 @@ export default class UserController {
         const {userId} = req.params;
         const updatingData = req.body as Partial<IRequestBodyUser>;
 
-        const updatedUser = await this.userService.updateUserById(userId, updatingData);
+        const updatedUser = await this._userService.updateUserById(userId, updatingData);
 
         const adaptedUserObject = userObjectResource(updatedUser);
 
@@ -64,8 +73,10 @@ export default class UserController {
     async deleteUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
         const {userId} = req.params;
 
-        await this.userService.deleteUserById(userId);
+        await this._userService.deleteUserById(userId);
 
         res.status(ResponseStatusCodesEnum.NO_CONTENT).end();
     }
 }
+
+export {UserController};
