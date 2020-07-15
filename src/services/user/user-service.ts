@@ -1,31 +1,38 @@
-import { UserModel } from '../../database';
-import { IRequestBodyUser, IUser } from '../../interfaces';
-import { injectable } from 'inversify';
+import { inject ,injectable } from 'inversify';
 import 'reflect-metadata';
+
+import { IRequestBodyUser, IUser } from '../../interfaces';
 import { IUserService } from './user-service-interface';
+import { IUserRepository } from '../../repositories/user';
+import { TYPES } from '../../dependency';
 
 @injectable()
 class UserService implements IUserService{
-    createUser(user: IRequestBodyUser): Promise<IUser> {
-        const userToCreate = new UserModel(user);
+    private readonly _userRepository: IUserRepository
 
-        return userToCreate.save();
+    constructor(
+        @inject(TYPES.userRepository) userRepository: IUserRepository
+    ) {
+        this._userRepository = userRepository;
+    }
+    createUser(user: IRequestBodyUser): Promise<IUser> {
+        return this._userRepository.createUser(user);
     }
 
     getUserById(userId: string): Promise<IUser> {
-        return UserModel.findById(userId) as any;
+        return this._userRepository.getUserById(userId);
     }
 
-    getAllUsers(): Promise<IUser> {
-        return UserModel.find() as any;
+    getAllUsers(): Promise<IUser[]> {
+        return this._userRepository.getAllUsers();
     }
 
     updateUserById(userId: string, updateData: Partial<IRequestBodyUser>): Promise<IUser> {
-        return UserModel.findByIdAndUpdate(userId, updateData, {new: true}) as any;
+        return this._userRepository.updateUserById(userId, updateData);
     }
 
     deleteUserById(userId: string): Promise<void> {
-        return UserModel.findByIdAndDelete(userId) as any;
+        return this._userRepository.deleteUserById(userId);
     }
 }
 
