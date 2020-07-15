@@ -5,14 +5,14 @@ import 'reflect-metadata';
 import { arrayOfUserObjects, userObjectResource } from '../../helpers';
 import { IUserService } from '../../services';
 import { ResponseStatusCodesEnum } from '../../constants';
-import { IRequestBodyUser } from '../../interfaces';
+import { IRequestBodyUser, IUser } from '../../interfaces';
 import { customErrors, ErrorHandler } from '../../errors';
-import { TYPES } from '../../dependency/types';
+import { TYPES } from '../../dependency';
 import { IUserController } from './user-controller-interface';
 
 @injectable()
 class UserController implements IUserController{
-    private _userService: IUserService;
+    private readonly _userService: IUserService;
 
     constructor(
         @inject(TYPES.userService) userService: IUserService
@@ -51,7 +51,7 @@ class UserController implements IUserController{
     }
 
     async getAllUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const users = await this._userService.getAllUsers() as any; //TODO Think about it
+        const users = await this._userService.getAllUsers() as IUser[];
 
         const adaptedUsersArray = arrayOfUserObjects(users);
 

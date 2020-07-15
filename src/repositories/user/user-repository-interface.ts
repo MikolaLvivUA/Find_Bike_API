@@ -1,6 +1,6 @@
 import { IRequestBodyUser, IUser } from '../../interfaces';
 
-export interface IUserService {
+export interface IUserRepository {
     createUser(user: IRequestBodyUser): Promise<IUser>;
     getUserById(userId: string): Promise<IUser>;
     getAllUsers(): Promise<IUser[]>;
