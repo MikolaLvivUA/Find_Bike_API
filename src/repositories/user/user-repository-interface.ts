@@ -1,9 +1,8 @@
-import { IRequestBodyUser, IUser } from '../../interfaces';
+import { IUser } from '../../interfaces';
 
 export interface IUserRepository {
-    createUser(user: IRequestBodyUser): Promise<IUser>;
-    getUserById(userId: string): Promise<IUser>;
-    getAllUsers(): Promise<IUser[]>;
-    updateUserById(userId: string, updateData: Partial<IRequestBodyUser>): Promise<IUser>;
+    save(user: IUser): Promise<IUser>;
+    byId(userId: string): Promise<IUser | null>
+    find(params?: Partial<IUser>): Promise<IUser[] | null>;
     deleteUserById(userId: string): Promise<void>;
 }

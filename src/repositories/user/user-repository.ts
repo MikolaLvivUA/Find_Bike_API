@@ -2,27 +2,25 @@ import 'reflect-metadata';
 import { injectable } from 'inversify';
 
 import { UserModel } from '../../database';
-import { IRequestBodyUser, IUser } from '../../interfaces';
+import { IUser } from '../../interfaces';
 import { IUserRepository } from './user-repository-interface';
+import { UserType } from '../../database/models';
 
 @injectable()
 class UserRepository implements IUserRepository{
-    createUser(user: IRequestBodyUser): Promise<IUser> {
-        const userToCreate = new UserModel(user);
+    save(UserModel: UserType): Promise<IUser> {
 
-        return userToCreate.save();
+        return UserModel.save();
     }
 
-    getUserById(userId: string): Promise<IUser> {
-        return UserModel.findById(userId) as any;
+    async byId(userId: string): Promise<IUser | null> {
+        const user = await UserModel.findById(userId).exec();
+
+        return user;
     }
 
-    getAllUsers(): Promise<IUser[]> {
-        return UserModel.find() as any;
-    }
-
-    updateUserById(userId: string, updateData: Partial<IRequestBodyUser>): Promise<IUser> {
-        return UserModel.findByIdAndUpdate(userId, updateData, {new: true}) as any;
+    find(params?: Partial<IUser> ): Promise<IUser[] | null> {
+        return UserModel.find({ params }).exec();
     }
 
     deleteUserById(userId: string): Promise<void> {

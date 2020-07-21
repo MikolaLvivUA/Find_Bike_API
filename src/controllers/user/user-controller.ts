@@ -6,7 +6,7 @@ import { arrayOfUserObjects, userObjectResource } from '../../helpers';
 import { IUserService } from '../../services';
 import { ResponseStatusCodesEnum } from '../../constants';
 import { IRequestBodyUser, IUser } from '../../interfaces';
-import { customErrors, ErrorHandler } from '../../errors';
+import { customErrors } from '../../exceptions';
 import { TYPES } from '../../dependency';
 import { IUserController } from './user-controller-interface';
 
@@ -31,31 +31,39 @@ class UserController implements IUserController{
     }
 
     async getUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const { userId } = req.params;
 
-        const user = await this._userService.getUserById(userId);
+        try {
+            const { userId } = req.params;
 
-        if (!user) {
-            return next(
-                new ErrorHandler(
-                    ResponseStatusCodesEnum.NOT_FOUND,
-                    customErrors.NOT_FOUND.message,
-                    customErrors.NOT_FOUND.code
-                )
-            );
+            const user = await this._userService.getUserById(userId) as IUser;
+
+            const adaptedUserObject = userObjectResource(user);
+
+            res.json({data: adaptedUserObject});
+
+        } catch (e) {
+            if (e.code === customErrors.USER_NOT_FOUND.code) {
+                console.log(e);
+
+                return next(e);
+            }
+            e.status = ResponseStatusCodesEnum.SERVER;
         }
-
-        const adaptedUserObject = userObjectResource(user);
-
-        res.json({data: adaptedUserObject});
     }
 
     async getAllUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const users = await this._userService.getAllUsers() as IUser[];
+        try {
+            const users = await this._userService.getAllUsers();
 
-        const adaptedUsersArray = arrayOfUserObjects(users);
+            const adaptedUsersArray = arrayOfUserObjects(users);
 
-        res.json({data: adaptedUsersArray});
+            res.json({data: adaptedUsersArray});
+        } catch (e) {
+            if (e.code === customErrors.USER_NOT_FOUND.code) {
+                e.status = ResponseStatusCodesEnum.NOT_FOUND;
+            }
+            e.status = ResponseStatusCodesEnum.SERVER;
+        }
     }
 
     async updateUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
