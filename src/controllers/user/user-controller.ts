@@ -42,8 +42,8 @@ class UserController implements IUserController{
             res.json({data: adaptedUserObject});
 
         } catch (e) {
-            if (e.code === customErrors.USER_NOT_FOUND.code) {
-                console.log(e);
+            if (e.name === 'UserNotFoundException' || e.message.indexOf('Cast to ObjectId failed')) {
+                e.status = ResponseStatusCodesEnum.NOT_FOUND;
 
                 return next(e);
             }
@@ -52,18 +52,13 @@ class UserController implements IUserController{
     }
 
     async getAllUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
-        try {
-            const users = await this._userService.getAllUsers();
 
-            const adaptedUsersArray = arrayOfUserObjects(users);
+        const users = await this._userService.getAllUsers();
 
-            res.json({data: adaptedUsersArray});
-        } catch (e) {
-            if (e.code === customErrors.USER_NOT_FOUND.code) {
-                e.status = ResponseStatusCodesEnum.NOT_FOUND;
-            }
-            e.status = ResponseStatusCodesEnum.SERVER;
-        }
+        const adaptedUsersArray = arrayOfUserObjects(users);
+
+        res.json({data: adaptedUsersArray});
+
     }
 
     async updateUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -79,11 +74,19 @@ class UserController implements IUserController{
     }
 
     async deleteUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const { userId } = req.params;
+        try {
+            const { userId } = req.params;
 
-        await this._userService.deleteUserById(userId);
+            await this._userService.deleteUserById(userId);
 
-        res.status(ResponseStatusCodesEnum.NO_CONTENT).end();
+            res.status(ResponseStatusCodesEnum.NO_CONTENT).end();
+
+        } catch (e) {
+            if (e.code === customErrors.USER_NOT_FOUND.code) {
+                e.status = ResponseStatusCodesEnum.NOT_FOUND;
+            }
+            e.status = ResponseStatusCodesEnum.SERVER;
+        }
     }
 }
 

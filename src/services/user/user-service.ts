@@ -7,8 +7,6 @@ import { IUserService } from './user-service-interface';
 import { IUserRepository } from '../../repositories/user';
 import { TYPES } from '../../dependency';
 import { UserNotFoundException } from '../../exceptions/user';
-import { ResponseStatusCodesEnum } from '../../constants';
-import { customErrors } from '../../exceptions';
 
 @injectable()
 class UserService implements IUserService{
@@ -30,11 +28,7 @@ class UserService implements IUserService{
         const user = await this.userRepository.byId(userId);
 
         if (!user) {
-            throw new UserNotFoundException(
-                ResponseStatusCodesEnum.NOT_FOUND,
-                customErrors.USER_NOT_FOUND.message,
-                customErrors.USER_NOT_FOUND.code
-            );
+            throw new UserNotFoundException('User Not Found');
         }
 
         return user;
@@ -42,14 +36,6 @@ class UserService implements IUserService{
 
     async getAllUsers(): Promise<IUser[]> {
         const users = await this.userRepository.find();
-
-        if (!users) {
-            throw new UserNotFoundException(
-                ResponseStatusCodesEnum.NOT_FOUND,
-                customErrors.USER_NOT_FOUND.message,
-                customErrors.USER_NOT_FOUND.code
-            );
-        }
 
         return users;
 
@@ -63,8 +49,11 @@ class UserService implements IUserService{
         return this.userRepository.save(updatedUser);
     }
 
-    deleteUserById(userId: string): Promise<void> {
-        return this.userRepository.deleteUserById(userId);
+    async deleteUserById(userId: string): Promise<void> {
+
+        const user = await this.getUserById(userId);
+
+        return this.userRepository.delete({_id: user._id});
     }
 }
 

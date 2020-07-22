@@ -17,14 +17,15 @@ class UserRepository implements IUserRepository{
         const user = await UserModel.findById(userId).exec();
 
         return user;
+
     }
 
-    find(params?: Partial<IUser> ): Promise<IUser[] | null> {
+    find(params?: Partial<IUser> ): Promise<IUser[]> {
         return UserModel.find({ params }).exec();
     }
 
-    deleteUserById(userId: string): Promise<void> {
-        return UserModel.findByIdAndDelete(userId) as any;
+    delete(params: Partial<IUser>): Promise<void> {
+        return UserModel.deleteOne(params) as any;
     }
 }
 
