@@ -12,18 +12,18 @@ import { IUserController } from './user-controller-interface';
 
 @injectable()
 class UserController implements IUserController{
-    private readonly _userService: IUserService;
+    private readonly userService: IUserService;
 
     constructor(
         @inject(TYPES.userService) userService: IUserService
     ) {
-        this._userService = userService;
+        this.userService = userService;
     }
 
     async createUser(req: Request, res: Response, next: NextFunction): Promise<void> {
         const creatingData = req.body as IRequestBodyUser;
 
-        const user = await this._userService.createUser(creatingData);
+        const user = await this.userService.createUser(creatingData);
 
         const adaptedUserObject = userObjectResource(user);
 
@@ -35,7 +35,7 @@ class UserController implements IUserController{
         try {
             const { userId } = req.params;
 
-            const user = await this._userService.getUserById(userId) as IUser;
+            const user = await this.userService.getUserById(userId) as IUser;
 
             const adaptedUserObject = userObjectResource(user);
 
@@ -53,7 +53,7 @@ class UserController implements IUserController{
 
     async getAllUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
 
-        const users = await this._userService.getAllUsers();
+        const users = await this.userService.getAllUsers();
 
         const adaptedUsersArray = arrayOfUserObjects(users);
 
@@ -66,7 +66,7 @@ class UserController implements IUserController{
         const { userId } = req.params;
         const updatingData = req.body as Partial<IRequestBodyUser>;
 
-        const updatedUser = await this._userService.updateUserById(userId, updatingData);
+        const updatedUser = await this.userService.updateUserById(userId, updatingData);
 
         const adaptedUserObject = userObjectResource(updatedUser);
 
@@ -77,7 +77,7 @@ class UserController implements IUserController{
         try {
             const { userId } = req.params;
 
-            await this._userService.deleteUserById(userId);
+            await this.userService.deleteUserById(userId);
 
             res.status(ResponseStatusCodesEnum.NO_CONTENT).end();
 
