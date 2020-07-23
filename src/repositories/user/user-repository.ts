@@ -24,8 +24,8 @@ class UserRepository implements IUserRepository{
         return UserModel.find({ params }).exec();
     }
 
-    delete(params: Partial<IUser>): Promise<void> {
-        return UserModel.deleteOne(params) as any;
+    async delete(user: IUser): Promise<void> {
+        await UserModel.deleteOne({_id: user._id});
     }
 }
 

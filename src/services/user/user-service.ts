@@ -53,7 +53,7 @@ class UserService implements IUserService{
 
         const user = await this.getUserById(userId);
 
-        return this.userRepository.delete({_id: user._id});
+        return this.userRepository.delete(user);
     }
 }
 
