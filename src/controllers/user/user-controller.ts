@@ -21,13 +21,19 @@ class UserController implements IUserController{
     }
 
     async createUser(req: Request, res: Response, next: NextFunction): Promise<void> {
-        const creatingData = req.body as IRequestBodyUser;
 
-        const user = await this.userService.createUser(creatingData);
+        try {
+            const creatingData = req.body as IRequestBodyUser;
 
-        const adaptedUserObject = userObjectResource(user);
+            const user = await this.userService.createUser(creatingData);
 
-        res.status(ResponseStatusCodesEnum.CREATED).json({data: adaptedUserObject});
+            const adaptedUserObject = userObjectResource(user);
+
+            res.status(ResponseStatusCodesEnum.CREATED).json({data: adaptedUserObject});
+
+        } catch (e) {
+            return next(e)
+        }
     }
 
     async getUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -42,7 +48,7 @@ class UserController implements IUserController{
             res.json({data: adaptedUserObject});
 
         } catch (e) {
-            if (e.name === 'UserNotFoundException' || e.message.indexOf('Cast to ObjectId failed')) {
+            if (e.name === 'UserNotFoundException') {
                 e.status = ResponseStatusCodesEnum.NOT_FOUND;
 
                 return next(e);
@@ -53,24 +59,32 @@ class UserController implements IUserController{
 
     async getAllUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
 
-        const users = await this.userService.getAllUsers();
+        try {
+            const users = await this.userService.getAllUsers();
 
-        const adaptedUsersArray = arrayOfUserObjects(users);
+            const adaptedUsersArray = arrayOfUserObjects(users);
 
-        res.json({data: adaptedUsersArray});
+            res.json({data: adaptedUsersArray});
 
+        } catch (e) {
+            return next(e)
+        }
     }
 
     async updateUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
 
-        const { userId } = req.params;
-        const updatingData = req.body as Partial<IRequestBodyUser>;
+        try {
+            const { userId } = req.params;
+            const updatingData = req.body as Partial<IRequestBodyUser>;
 
-        const updatedUser = await this.userService.updateUserById(userId, updatingData);
+            const updatedUser = await this.userService.updateUserById(userId, updatingData);
 
-        const adaptedUserObject = userObjectResource(updatedUser);
+            const adaptedUserObject = userObjectResource(updatedUser);
 
-        res.json({data: adaptedUserObject});
+            res.json({data: adaptedUserObject});
+        } catch (e) {
+            return next(e);
+        }
     }
 
     async deleteUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -84,8 +98,12 @@ class UserController implements IUserController{
         } catch (e) {
             if (e.code === customErrors.USER_NOT_FOUND.code) {
                 e.status = ResponseStatusCodesEnum.NOT_FOUND;
+
+                return next(e)
             }
             e.status = ResponseStatusCodesEnum.SERVER;
+
+            return next(e);
         }
     }
 }

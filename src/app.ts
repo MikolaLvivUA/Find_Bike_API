@@ -85,7 +85,7 @@ class App {
 
     }
 
-    private customErrorHandler(err: any, req: Request, res: Response, next: NextFunction): void {
+    private customErrorHandler(err: any, req: Request, res: Response): void {
         res
             .status(err.status || 500)
             .json({

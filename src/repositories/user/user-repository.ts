@@ -14,10 +14,16 @@ class UserRepository implements IUserRepository{
     }
 
     async byId(userId: string): Promise<IUser | null> {
-        const user = await UserModel.findById(userId).exec();
+        try {
+            const user = await UserModel.findById(userId).exec();
 
-        return user;
-
+            return user;
+        } catch (e) {
+            if (e.message.indexOf('Cast to ObjectId failed')) {
+                return null;
+            }
+            return null;
+        }
     }
 
     find(params?: Partial<IUser> ): Promise<IUser[]> {
