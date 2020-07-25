@@ -1,3 +1,3 @@
 export enum TableNamesEnum {
-    USERS = 'users'
+  USERS = 'users'
 }

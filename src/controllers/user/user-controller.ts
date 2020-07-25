@@ -11,101 +11,93 @@ import { TYPES } from '../../dependency';
 import { IUserController } from './user-controller-interface';
 
 @injectable()
-class UserController implements IUserController{
-    private readonly userService: IUserService;
+class UserController implements IUserController {
+  private readonly userService: IUserService;
 
-    constructor(
-        @inject(TYPES.userService) userService: IUserService
-    ) {
-        this.userService = userService;
+  constructor(
+  @inject(TYPES.userService) userService: IUserService,
+  ) {
+    this.userService = userService;
+  }
+
+  async createUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const creatingData = req.body as IRequestBodyUser;
+
+      const user = await this.userService.createUser(creatingData);
+
+      const adaptedUserObject = userObjectResource(user);
+
+      res.status(ResponseStatusCodesEnum.CREATED).json({ data: adaptedUserObject });
+    } catch (e) {
+      return next(e);
     }
+  }
 
-    async createUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { userId } = req.params;
 
-        try {
-            const creatingData = req.body as IRequestBodyUser;
+      const user = await this.userService.getUserById(userId) as IUser;
 
-            const user = await this.userService.createUser(creatingData);
+      const adaptedUserObject = userObjectResource(user);
 
-            const adaptedUserObject = userObjectResource(user);
+      res.json({ data: adaptedUserObject });
+    } catch (e) {
+      if (e.name === 'UserNotFoundException') {
+        e.status = ResponseStatusCodesEnum.NOT_FOUND;
 
-            res.status(ResponseStatusCodesEnum.CREATED).json({data: adaptedUserObject});
-
-        } catch (e) {
-            return next(e)
-        }
+        return next(e);
+      }
+      e.status = ResponseStatusCodesEnum.SERVER;
     }
+  }
 
-    async getUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async getAllUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const users = await this.userService.getAllUsers();
 
-        try {
-            const { userId } = req.params;
+      const adaptedUsersArray = arrayOfUserObjects(users);
 
-            const user = await this.userService.getUserById(userId) as IUser;
-
-            const adaptedUserObject = userObjectResource(user);
-
-            res.json({data: adaptedUserObject});
-
-        } catch (e) {
-            if (e.name === 'UserNotFoundException') {
-                e.status = ResponseStatusCodesEnum.NOT_FOUND;
-
-                return next(e);
-            }
-            e.status = ResponseStatusCodesEnum.SERVER;
-        }
+      res.json({ data: adaptedUsersArray });
+    } catch (e) {
+      return next(e);
     }
+  }
 
-    async getAllUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async updateUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { userId } = req.params;
+      const updatingData = req.body as Partial<IRequestBodyUser>;
 
-        try {
-            const users = await this.userService.getAllUsers();
+      const updatedUser = await this.userService.updateUserById(userId, updatingData);
 
-            const adaptedUsersArray = arrayOfUserObjects(users);
+      const adaptedUserObject = userObjectResource(updatedUser);
 
-            res.json({data: adaptedUsersArray});
-
-        } catch (e) {
-            return next(e)
-        }
+      res.json({ data: adaptedUserObject });
+    } catch (e) {
+      return next(e);
     }
+  }
 
-    async updateUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
+  async deleteUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { userId } = req.params;
 
-        try {
-            const { userId } = req.params;
-            const updatingData = req.body as Partial<IRequestBodyUser>;
+      await this.userService.deleteUserById(userId);
 
-            const updatedUser = await this.userService.updateUserById(userId, updatingData);
+      res.status(ResponseStatusCodesEnum.NO_CONTENT).end();
+    } catch (e) {
+      if (e.code === customErrors.USER_NOT_FOUND.code) {
+        e.status = ResponseStatusCodesEnum.NOT_FOUND;
 
-            const adaptedUserObject = userObjectResource(updatedUser);
+        return next(e);
+      }
+      e.status = ResponseStatusCodesEnum.SERVER;
 
-            res.json({data: adaptedUserObject});
-        } catch (e) {
-            return next(e);
-        }
+      return next(e);
     }
-
-    async deleteUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
-        try {
-            const { userId } = req.params;
-
-            await this.userService.deleteUserById(userId);
-
-            res.status(ResponseStatusCodesEnum.NO_CONTENT).end();
-
-        } catch (e) {
-            if (e.code === customErrors.USER_NOT_FOUND.code) {
-                e.status = ResponseStatusCodesEnum.NOT_FOUND;
-
-                return next(e)
-            }
-            e.status = ResponseStatusCodesEnum.SERVER;
-
-            return next(e);
-        }
-    }
+  }
 }
 
 export { UserController };

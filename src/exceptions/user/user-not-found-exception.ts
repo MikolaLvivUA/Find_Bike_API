@@ -1,8 +1,8 @@
 export class UserNotFoundException extends Error {
-    name = 'UserNotFoundException';
+  name = 'UserNotFoundException';
 
-    constructor(msg: string) {
-        super(msg);
-        Error.captureStackTrace(this, this.constructor);
-    }
+  constructor(msg: string) {
+    super(msg);
+    Error.captureStackTrace(this, this.constructor);
+  }
 }
