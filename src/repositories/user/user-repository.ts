@@ -2,32 +2,37 @@ import 'reflect-metadata';
 import { injectable } from 'inversify';
 
 import { UserModel } from '../../database';
-import { IRequestBodyUser, IUser } from '../../interfaces';
+import { IUser } from '../../interfaces';
 import { IUserRepository } from './user-repository-interface';
+import { UserType } from '../../database/models';
 
 @injectable()
-class UserRepository implements IUserRepository{
-    createUser(user: IRequestBodyUser): Promise<IUser> {
-        const userToCreate = new UserModel(user);
+class UserRepository implements IUserRepository {
+  save(user: UserType): Promise<IUser> {
+    return user.save();
+  }
 
-        return userToCreate.save();
-    }
+  async byId(userId: string): Promise<IUser | null> {
+    try {
+      const user = await UserModel.findById(userId).exec();
 
-    getUserById(userId: string): Promise<IUser> {
-        return UserModel.findById(userId) as any;
+      return user;
+    } catch (e) {
+      if (e.message.indexOf('Cast to ObjectId failed')) {
+        return null;
+      }
+      return null;
     }
+  }
 
-    getAllUsers(): Promise<IUser[]> {
-        return UserModel.find() as any;
-    }
+  find(params?: Partial<IUser>): Promise<IUser[]> {
+    return UserModel.find({ params }).exec();
+  }
 
-    updateUserById(userId: string, updateData: Partial<IRequestBodyUser>): Promise<IUser> {
-        return UserModel.findByIdAndUpdate(userId, updateData, {new: true}) as any;
-    }
-
-    deleteUserById(userId: string): Promise<void> {
-        return UserModel.findByIdAndDelete(userId) as any;
-    }
+  async delete(user: IUser): Promise<void> {
+    // eslint-disable-next-line no-underscore-dangle
+    await UserModel.deleteOne({ _id: user._id });
+  }
 }
 
 export { UserRepository };

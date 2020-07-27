@@ -1,39 +1,58 @@
-import { inject ,injectable } from 'inversify';
+import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
 
+import { UserModel } from '../../database';
 import { IRequestBodyUser, IUser } from '../../interfaces';
 import { IUserService } from './user-service-interface';
 import { IUserRepository } from '../../repositories/user';
 import { TYPES } from '../../dependency';
+import { UserNotFoundException } from '../../exceptions/user';
 
 @injectable()
-class UserService implements IUserService{
-    private readonly _userRepository: IUserRepository
+class UserService implements IUserService {
+  private readonly userRepository: IUserRepository;
 
-    constructor(
-        @inject(TYPES.userRepository) userRepository: IUserRepository
-    ) {
-        this._userRepository = userRepository;
-    }
-    createUser(user: IRequestBodyUser): Promise<IUser> {
-        return this._userRepository.createUser(user);
-    }
+  constructor(
+  @inject(TYPES.userRepository) userRepository: IUserRepository,
+  ) {
+    this.userRepository = userRepository;
+  }
 
-    getUserById(userId: string): Promise<IUser> {
-        return this._userRepository.getUserById(userId);
-    }
+  createUser(user: IRequestBodyUser): Promise<IUser> {
+    const newUser = new UserModel(user);
 
-    getAllUsers(): Promise<IUser[]> {
-        return this._userRepository.getAllUsers();
-    }
+    return this.userRepository.save(newUser);
+  }
 
-    updateUserById(userId: string, updateData: Partial<IRequestBodyUser>): Promise<IUser> {
-        return this._userRepository.updateUserById(userId, updateData);
+  async getUserById(userId: string): Promise<IUser> {
+    const user = await this.userRepository.byId(userId);
+
+    if (!user) {
+      throw new UserNotFoundException('User Not Found');
     }
 
-    deleteUserById(userId: string): Promise<void> {
-        return this._userRepository.deleteUserById(userId);
-    }
+    return user;
+  }
+
+  async getAllUsers(): Promise<IUser[]> {
+    const users = await this.userRepository.find();
+
+    return users;
+  }
+
+  async updateUserById(userId: string, updateData: Partial<IRequestBodyUser>): Promise<IUser> {
+    const user = await this.getUserById(userId);
+
+    const updatedUser = Object.assign(user, updateData);
+
+    return this.userRepository.save(updatedUser);
+  }
+
+  async deleteUserById(userId: string): Promise<void> {
+    const user = await this.getUserById(userId);
+
+    return this.userRepository.delete(user);
+  }
 }
 
 export { UserService };
