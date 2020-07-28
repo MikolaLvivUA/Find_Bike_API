@@ -1,0 +1,25 @@
+version: "3"
+
+volumes:
+  mongodb_volumes:
+
+services:
+  mongodb:
+    container_name: mongo
+    image: mongo:latest
+    ports:
+    - 27017:27017
+    volumes:
+    - mongodb_volumes:/data/db
+    restart: always
+
+  find_bike_api:
+    container_name: find_bike_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+    - 5000:5000
+    links:
+      - mongodb
