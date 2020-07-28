@@ -9,7 +9,7 @@ import * as mongoose from 'mongoose';
 import * as path from 'path';
 import { OpenApiValidator } from 'express-openapi-validator';
 
-import logger from './helpers/logger';
+import { logger } from './helpers';
 import { config } from './config';
 import { apiRouter, notFoundRouter } from './routes';
 
@@ -85,7 +85,7 @@ class App {
     this.app.use('*', notFoundRouter);
   }
 
-  private customErrorHandler(err: any, req: Request, res: Response): void {
+  private customErrorHandler(err: any, req: Request, res: Response, next: NextFunction): void {
     res
       .status(err.status || 500)
       .json({
@@ -113,6 +113,4 @@ class App {
   }
 }
 
-const { app } = new App();
-
-export default app;
+export const { app } = new App();
