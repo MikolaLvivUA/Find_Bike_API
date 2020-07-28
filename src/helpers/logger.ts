@@ -2,7 +2,7 @@ import { createLogger, format, transports } from 'winston';
 
 const { combine, timestamp, prettyPrint } = format;
 
-const logger = createLogger({
+export const logger = createLogger({
   format: combine(
     timestamp(),
     prettyPrint(),
@@ -14,5 +14,3 @@ const logger = createLogger({
   ],
   exitOnError: false,
 });
-
-export default logger;

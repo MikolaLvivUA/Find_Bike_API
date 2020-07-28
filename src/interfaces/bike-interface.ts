@@ -1,6 +1,6 @@
 export interface IBike {
   _id: string,
-  serial_number: string,
+  serialNumber: string,
   color: string,
   type?: string,
   description: string,

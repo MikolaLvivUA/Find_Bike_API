@@ -212,9 +212,9 @@ paths:
               items:
                 type: object
                 properties:
-                  serial_number:
+                  serialNumber:
                     type: string
-                    description: The bike serial_number
+                    description: The bike serial number
                   color:
                     type: string
                     description: The bike color
@@ -229,7 +229,7 @@ paths:
                     format: binary
                     description: The bike photo
                 required:
-                  - serial_number
+                  - serialNumber
                   - color
                   - type
                   - description
@@ -277,7 +277,7 @@ paths:
           application/json:
             schema:
               properties:
-                serial_number:
+                serialNumber:
                   type: string
                   description: The bike serial number
                 color:

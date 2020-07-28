@@ -10,5 +10,5 @@ export const config = {
     maxRequests: 1000,
   },
 
-  MONGODB_URL: process.env.MONGODB_URL || 'mongodb://localhost/find_bike',
+  MONGODB_URL: process.env.MONGODB_URL || 'mongodb://mongo:27017/find_bike',
 };
