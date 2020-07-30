@@ -85,6 +85,7 @@ class App {
     this.app.use('*', notFoundRouter);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private customErrorHandler(err: any, req: Request, res: Response, next: NextFunction): void {
     res
       .status(err.status || 500)

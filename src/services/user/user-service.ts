@@ -1,7 +1,9 @@
 import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
+import { v4 as uuidv4 } from 'uuid';
 
 import { UserModel } from '../../database';
+import { User } from '../../models';
 import { IRequestBodyUser, IUser } from '../../interfaces';
 import { IUserService } from './user-service-interface';
 import { IUserRepository } from '../../repositories/user';
@@ -19,6 +21,10 @@ class UserService implements IUserService {
   }
 
   createUser(user: IRequestBodyUser): Promise<IUser> {
+
+    const newUserModel = new User(user);
+    newUserModel.uuid = uuidv4();
+
     const newUser = new UserModel(user);
 
     return this.userRepository.save(newUser);
