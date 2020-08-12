@@ -5,10 +5,11 @@ import 'reflect-metadata';
 import { arrayOfUserObjects, userObjectResource } from '../../helpers';
 import { IUserService } from '../../services';
 import { ResponseStatusCodesEnum } from '../../constants';
-import { IRequestBodyUser, IUser } from '../../interfaces';
+import { IRequestBodyUser } from '../../interfaces';
 import { customErrors } from '../../exceptions';
 import { TYPES } from '../../dependency';
 import { IUserController } from './user-controller-interface';
+import { User } from '../../models/user';
 
 @injectable()
 class UserController implements IUserController {
@@ -26,7 +27,11 @@ class UserController implements IUserController {
 
       const user = await this.userService.createUser(creatingData);
 
+      console.log(user.userUuid); // ==> udefined
+
       const adaptedUserObject = userObjectResource(user);
+
+      console.log(adaptedUserObject);
 
       res.status(ResponseStatusCodesEnum.CREATED).json({ data: adaptedUserObject });
     } catch (e) {
@@ -38,7 +43,7 @@ class UserController implements IUserController {
     try {
       const { userId } = req.params;
 
-      const user = await this.userService.getUserById(userId) as IUser;
+      const user = await this.userService.getUserById(userId) as User;
 
       const adaptedUserObject = userObjectResource(user);
 

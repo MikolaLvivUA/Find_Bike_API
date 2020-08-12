@@ -1,87 +1,98 @@
-import { IBike, IUser } from '../../interfaces';
+import { UserStatusEnum } from '../../constants';
+import { IBike } from '../../interfaces';
 
 class User {
-  private user: IUser
+    private uuid: string
+    private name: string
+    private surname: string
+    private email: string
+    private phone: string
+    private dateOfBirth: string
+    private status: string
+    private bikes: IBike[]
+    private createdAt: Date
 
-  constructor(user: IUser) {
-    this.user = user;
-  }
+    constructor(uuid: string, name: string, surname: string, email: string, phone: string, dateOfBirth: string,
+      status = UserStatusEnum.ACTIVE_STATUS, bikes = [], createdAt = new Date()) {
+      this.uuid = uuid;
+      this.name = name;
+      this.surname = surname;
+      this.email = email;
+      this.phone = phone;
+      this.phone = phone;
+      this.dateOfBirth = dateOfBirth;
+      this.status = status;
+      this.bikes = bikes;
+      this.createdAt = createdAt;
+    }
 
-  get uuid(): string {
-    return this.user.uuid;
-  }
+    get userUuid(): string {
+      return this.uuid;
+    }
 
-  set uuid(uuid: string) {
-    this.user.uuid = uuid;
-  }
+    set userUuid(uuid: string) {
+      this.uuid = uuid;
+    }
 
-  get name(): string {
-    return this.user.name;
-  }
+    get userName(): string {
+      return this.name;
+    }
 
-  set name(name: string) {
-    this.user.name = name;
-  }
+    set userName(name: string) {
+      this.name = name;
+    }
 
-  get surname(): string {
-    return this.user.surname;
-  }
+    get userSurname(): string {
+      return this.surname;
+    }
 
-  set surname(surname: string) {
-    this.user.surname = surname;
-  }
+    set userSurname(surname: string) {
+      this.surname = surname;
+    }
 
-  get email(): string {
-    return this.user.email;
-  }
+    get userEmail(): string {
+      return this.email;
+    }
 
-  set email(email: string) {
-    this.user.email = email;
-  }
+    set userEmail(email: string) {
+      this.email = email;
+    }
 
-  get phone(): string {
-    return this.user.phone;
-  }
+    get userPhone(): string {
+      return this.phone;
+    }
 
-  set phone(phone: string) {
-    this.user.phone = phone;
-  }
+    set userPhone(phone: string) {
+      this.phone = phone;
+    }
 
-  get dateOfBirth(): string {
-    return this.user.dateOfBirth;
-  }
+    get userDateOfBirth(): string {
+      return this.dateOfBirth;
+    }
 
-  set dateOfBirth(dateOfBirth: string) {
-    this.user.dateOfBirth = dateOfBirth;
-  }
+    set userDateOfBirth(dateOfBirth: string) {
+      this.dateOfBirth = dateOfBirth;
+    }
 
-  get status(): string {
-    return this.user.status;
-  }
+    get userStatus(): string {
+      return this.status;
+    }
 
-  set status(status: string) {
-    this.user.status = status;
-  }
+    set userStatus(status: string) {
+      this.status = status;
+    }
 
-  get role(): string {
-    return this.user.role;
-  }
+    get userBikes(): IBike[] {
+      return this.bikes;
+    }
 
-  set role(role: string) {
-    this.user.role = role;
-  }
+    get userCreatedAt(): Date {
+      return this.createdAt;
+    }
 
-  get bikes(): IBike[] {
-    return this.user.bikes;
-  }
-
-  get createdAt(): string {
-    return this.user.createdAt;
-  }
-
-  set cratedAt(createdAt: string) {
-    this.user.createdAt = createdAt;
-  }
+    set userCreatedAt(createdAt: Date) {
+      this.createdAt = createdAt;
+    }
 }
 
 export { User };

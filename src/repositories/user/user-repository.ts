@@ -2,17 +2,18 @@ import 'reflect-metadata';
 import { injectable } from 'inversify';
 
 import { UserModel } from '../../database';
-import { IUser } from '../../interfaces';
 import { IUserRepository } from './user-repository-interface';
 import { UserType } from '../../database/models';
+import { User } from '../../models/user';
 
 @injectable()
 class UserRepository implements IUserRepository {
-  save(user: UserType): Promise<IUser> {
-    return user.save();
+  save(user: UserType): Promise<User> {
+    const NewUser = new UserModel(user);
+    return NewUser.save();
   }
 
-  async byId(userId: string): Promise<IUser | null> {
+  async byId(userId: string): Promise<User | null> {
     try {
       const user = await UserModel.findById(userId).exec();
 
@@ -25,13 +26,13 @@ class UserRepository implements IUserRepository {
     }
   }
 
-  find(params?: Partial<IUser>): Promise<IUser[]> {
+  find(params?: Partial<User>): Promise<User[]> {
     return UserModel.find({ params }).exec();
   }
 
-  async delete(user: IUser): Promise<void> {
+  async delete(user: User): Promise<void> {
     // eslint-disable-next-line no-underscore-dangle
-    await UserModel.deleteOne({ _id: user._id });
+    await UserModel.deleteOne({ _id: user.userUuid });
   }
 }
 

@@ -1,15 +1,13 @@
-import { IUser } from '../../interfaces';
+import { User } from '../../models/user';
 
-export const userObjectResource = (mongoObject: IUser) => ({
-  // eslint-disable-next-line no-underscore-dangle
-  id: mongoObject._id.toString(),
-  name: mongoObject.name,
-  surname: mongoObject.surname,
-  email: mongoObject.email,
-  phone: mongoObject.phone,
-  dateOfBirth: mongoObject.dateOfBirth.toString(),
-  status: mongoObject.status,
-  role: mongoObject.role,
-  bikes: mongoObject.bikes,
-  createdAt: mongoObject.createdAt.toString(),
+export const userObjectResource = (mongoObject: User) => ({
+  uuid: mongoObject.userUuid,
+  name: mongoObject.userName,
+  surname: mongoObject.userSurname,
+  email: mongoObject.userEmail,
+  phone: mongoObject.userPhone,
+  dateOfBirth: mongoObject.userDateOfBirth,
+  status: mongoObject.userStatus,
+  bikes: mongoObject.userBikes,
+  createdAt: mongoObject.userCreatedAt,
 });

@@ -2,9 +2,8 @@ import { inject, injectable } from 'inversify';
 import 'reflect-metadata';
 import { v4 as uuidv4 } from 'uuid';
 
-import { UserModel } from '../../database';
 import { User } from '../../models';
-import { IRequestBodyUser, IUser } from '../../interfaces';
+import { IRequestBodyUser } from '../../interfaces';
 import { IUserService } from './user-service-interface';
 import { IUserRepository } from '../../repositories/user';
 import { TYPES } from '../../dependency';
@@ -20,17 +19,14 @@ class UserService implements IUserService {
     this.userRepository = userRepository;
   }
 
-  createUser(user: IRequestBodyUser): Promise<IUser> {
+  createUser(user: IRequestBodyUser): Promise<User> {
+    const uuid = uuidv4();
+    const newUserModel = new User(uuid, user.name, user.surname, user.email, user.phone, user.dateOfBirth);
 
-    const newUserModel = new User(user);
-    newUserModel.uuid = uuidv4();
-
-    const newUser = new UserModel(user);
-
-    return this.userRepository.save(newUser);
+    return this.userRepository.save(newUserModel);
   }
 
-  async getUserById(userId: string): Promise<IUser> {
+  async getUserById(userId: string): Promise<User> {
     const user = await this.userRepository.byId(userId);
 
     if (!user) {
@@ -40,13 +36,13 @@ class UserService implements IUserService {
     return user;
   }
 
-  async getAllUsers(): Promise<IUser[]> {
+  async getAllUsers(): Promise<User[]> {
     const users = await this.userRepository.find();
 
     return users;
   }
 
-  async updateUserById(userId: string, updateData: Partial<IRequestBodyUser>): Promise<IUser> {
+  async updateUserById(userId: string, updateData: Partial<IRequestBodyUser>): Promise<User> {
     const user = await this.getUserById(userId);
 
     const updatedUser = Object.assign(user, updateData);

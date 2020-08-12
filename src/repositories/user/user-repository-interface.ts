@@ -1,8 +1,8 @@
-import { IUser } from '../../interfaces';
+import { User } from '../../models/user';
 
 export interface IUserRepository {
-  save(user: IUser): Promise<IUser>;
-  byId(userId: string): Promise<IUser | null>
-  find(params?: Partial<IUser>): Promise<IUser[]>;
-  delete(user: IUser): Promise<void>;
+  save(user: User): Promise<User>;
+  byId(userId: string): Promise<User | null>
+  find(params?: Partial<User>): Promise<User[]>;
+  delete(user: User): Promise<void>;
 }

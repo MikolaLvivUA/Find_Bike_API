@@ -9,7 +9,6 @@ export interface IUser {
   phone: string;
   dateOfBirth: string;
   status: string;
-  role: string;
   bikes: [IBike];
   createdAt: string;
 }
